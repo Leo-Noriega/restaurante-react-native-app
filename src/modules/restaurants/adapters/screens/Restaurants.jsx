@@ -45,7 +45,7 @@ export default function Restaurants() {
         )}
         keyExtractor={(item) => item.uid.toString()}
       />
-      <Loading isShow={loading} title="Cargando restaurantes"/>
+      <Loading isShow={loading} title="Cargando restaurantes" />
     </View>
   );
 }

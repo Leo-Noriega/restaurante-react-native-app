@@ -1,8 +1,9 @@
-import { StyleSheet, View } from "react-native";
-import { getAuth } from "firebase/auth";
-import React from "react";
-import { signOut } from "firebase/auth";
-import { Button } from "@rneui/base";
+import { StyleSheet, View, Text } from "react-native";
+import { getAuth, signOut, updateProfile } from "firebase/auth";
+import React, { useState, useEffect } from "react";
+import { Button, Avatar } from "@rneui/base";
+import PhotoProfile from "../components/PhotoProfile";
+import ActionProfile from "../components/ActionProfile";
 
 export default function Profile(props) {
   const { navigation } = props;
@@ -16,13 +17,23 @@ export default function Profile(props) {
         console.error(error);
       });
   };
+  const user = auth.currentUser;
+  const [userProfile, setUserProfile] = useState(null);
+  useEffect(() => {
+    if (user !== null) {
+      user.providerData.forEach((profile) => {
+        setUserProfile(profile);
+      });
+    }
+  }, []);
   return (
     <View style={styles.container}>
+      {userProfile && <PhotoProfile infoUser={userProfile} />}
+      {userProfile && <ActionProfile infoUser={userProfile} />}
       <Button
         title="Cerrar sesión"
         onPress={logout}
-        containerStyle={styles.btnContainer}
-        buttonStyle={styles.btnStyle}
+        buttonStyle={{ backgroundColor: "#EB5149", borderRadius: 10 }}
       />
     </View>
   );
@@ -32,15 +43,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
     padding: 16,
-  },
-  btnContainer: {
-    width: "80%",
-  },
-  btnStyle: {
-    backgroundColor: "#EB5149",
-    borderRadius: 10
   },
 });
